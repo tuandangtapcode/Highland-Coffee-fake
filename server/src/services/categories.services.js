@@ -27,6 +27,7 @@ class CategoriesServices {
     async fncGetAllCategoriesNotPaginate() {
         try {
             const data = await Categories.findAll();
+            console.log(data);
             return responseResult(data, false, 'Lấy data thành công');
         } catch (error) {
             return responseResult({}, true, error.toString());

@@ -12,35 +12,21 @@ import policy_6 from "../../assets/images/policy_6.webp"
 
 import { HomeSection, HomeSectionImage, HomeTittle, DataContainer, TextSpan, ButtonCategory } from './styled';
 
-
 import { useEffect, useState } from "react";
-import { getAllCategoriesNotPageinate } from '../../services/categoryService';
 import { getAllProducts } from '../../services/productService';
 import { Spin } from "antd";
 import ProductItem from "../../components/ListProducts/ProductItem";
+import { useSelector } from "react-redux";
+import { globalSelector } from "../../redux/selector";
 
 
 
 
 const HomePage = () => {
 
-
-
-    const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
-
-
-
-    useEffect(() => {
-        setLoading(true);
-        const getCategories = async () => {
-            const res = await getAllCategoriesNotPageinate();
-            setCategories(res.data.data);
-        }
-        getCategories();
-        setLoading(false);
-    }, [])
+    const global = useSelector(globalSelector);
 
     useEffect(() => {
         setLoading(true);
@@ -103,7 +89,7 @@ const HomePage = () => {
 
             <Spin spinning={loading}>
                 {
-                    categories.map((category, index) => (
+                    global.categories.map((category, index) => (
                         <DataContainer key={index}>
                             <ButtonCategory size="large" key={category?.id}>
                                 <TextSpan>

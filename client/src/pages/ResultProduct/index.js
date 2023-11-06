@@ -10,7 +10,6 @@ import { ArrowDownOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux'
 import { globalSelector } from '../../redux/selector'
-import { getAllCategoriesNotPageinate } from '../../services/categoryService';
 import { getAllProductsLimit } from '../../services/productService';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Select, Spin } from "antd";
@@ -25,7 +24,6 @@ const ResultProductPage = () => {
 
     const navigate = useNavigate();
 
-    const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [totalPage, setTotalPage] = useState();
     const [sort, setSort] = useState();
@@ -36,17 +34,6 @@ const ResultProductPage = () => {
     const loacation = useLocation();
     const params = new URLSearchParams(window.location.search);
     const query = params.get('query');
-
-
-    useEffect(() => {
-        setLoading(true);
-        const getCategories = async () => {
-            const res = await getAllCategoriesNotPageinate();
-            setCategories(res.data);
-        }
-        getCategories();
-        setLoading(false);
-    }, [])
 
     useEffect(() => {
         setLoading(true);
@@ -91,7 +78,7 @@ const ResultProductPage = () => {
         <LayoutUser>
             {loacation.pathname.includes('search') && <BreadCrumbCustom title='Kết quả tìm kiếm' />}
             {
-                categories.map(cate =>
+                global.categories.map(cate =>
                     cate.slug === cateSlug ? <BreadCrumbCustom title={cate.name} /> : <></>
                 )
             }
@@ -115,7 +102,7 @@ const ResultProductPage = () => {
             {query && totalProduct === 0 && <TextResultProduct>KHÔNG CÓ KẾT QUẢ TÌM KIẾM PHÙ HỢP</TextResultProduct>}
 
             {
-                !loacation.pathname.includes('search') && categories.map(cate =>
+                !loacation.pathname.includes('search') && global.categories.map(cate =>
                     cate.slug === cateSlug ? <TextResultProduct>{cate.name} {`( ${totalProduct} sản phẩm)`}</TextResultProduct> : <></>
                 )
             }

@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-export const addToCart = async (data) => {
+export const addToCart = (data) => {
     const { product_id, quantity, price, image, name } = data;
     const carts = Cookies.get('cart') && JSON.parse(Cookies.get('cart').slice(2)) || [];
     let check = false;
@@ -38,11 +38,11 @@ export const changeQuantity = (id, price, type) => {
     Cookies.set('cart', `j:${JSON.stringify(carts)}`);
 }
 
-export const removeAllCart = async () => {
+export const removeAllCart = () => {
     Cookies.remove('cart');
 }
 
-export const removeToCart = async (id) => {
+export const removeToCart = (id) => {
     const carts = Cookies.get('cart') && JSON.parse(Cookies.get('cart').slice(2)) || [];
     for (let i = 0; i < carts.length; i++) {
         if (carts[i].product_id == id) {

@@ -2,20 +2,12 @@ import { Row, Col } from "antd";
 import { HomeOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { StyledNavLink, NavBarContainer } from "./styled";
-import { useEffect, useState } from "react";
-import { getAllCategoriesNotPageinate } from "../../services/categoryService";
+import { useSelector } from "react-redux";
+import { globalSelector } from "../../redux/selector";
 
 const NavBar = () => {
 
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        const getCategories = async () => {
-            const res = await getAllCategoriesNotPageinate();
-            setCategories(res.data.data);
-        }
-        getCategories();
-    }, [])
+    const global = useSelector(globalSelector);
 
     return (
         <NavBarContainer>
@@ -36,7 +28,7 @@ const NavBar = () => {
 
             <Row>
                 {
-                    categories.map(cate =>
+                    global.categories.map(cate =>
                         <Col style={{ marginBottom: '40px' }}>
                             <StyledNavLink to={`/san-pham/${cate?.slug}`}>{cate?.name}</StyledNavLink>
                         </Col>

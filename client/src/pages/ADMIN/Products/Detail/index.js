@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LayoutAdmin from "../../../../components/Layouts/LayoutAdmin";
-import { getAllCategoriesNotPageinate, updateCategory } from '../../../../services/categoryService';
 import TextArea from 'antd/es/input/TextArea';
 import { getDetailProduct, updateProduct } from '../../../../services/productService';
+import { useSelector } from 'react-redux';
+import { globalSelector } from '../../../../redux/selector';
 
 
 const AdminDetailProduct = () => {
@@ -15,18 +16,11 @@ const AdminDetailProduct = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
-    const [categories, setCategories] = useState([]);
     const [cateid, setCateid] = useState();
     const [image, setImage] = useState();
     const [previewImage, setPreviewImage] = useState();
+    const global = useSelector(globalSelector);
 
-    useEffect(() => {
-        const getCategories = async () => {
-            const res = await getAllCategoriesNotPageinate();
-            setCategories(res.data);
-        }
-        getCategories();
-    }, [])
 
     useEffect(() => {
         const getDetail = async () => {
@@ -51,7 +45,7 @@ const AdminDetailProduct = () => {
     }, [form])
 
     const onFinish = async (values) => {
-        const res = await updateProduct(slug, image ? {...values, upload: image} : values);
+        const res = await updateProduct(slug, image ? { ...values, upload: image } : values);
         if (res.data) {
             toast.success("Cập nhật thành công!");
             navigate('/admin/san-pham');
@@ -98,7 +92,7 @@ const AdminDetailProduct = () => {
                 >
                     <Select defaultValue={cateid}>
                         {
-                            categories.map(category =>
+                            global.categories.map(category =>
                                 <Select.Option value={category.id}>{category.name}</Select.Option>
                             )
                         }
@@ -194,5 +188,5 @@ const AdminDetailProduct = () => {
         </LayoutAdmin>
     );
 }
- 
+
 export default AdminDetailProduct;

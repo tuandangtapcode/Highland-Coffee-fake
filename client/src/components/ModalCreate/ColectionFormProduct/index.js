@@ -1,24 +1,17 @@
 import { Form, Input, Modal, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { getAllCategoriesNotPageinate } from '../../../services/categoryService';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { createProduct } from '../../../services/productService';
+import { useSelector } from 'react-redux';
+import { globalSelector } from '../../../redux/selector';
 
 const CollectionFormProduct = ({ open, onCancel, getProducts, getTotalPageProduct }) => {
 
     const [form] = Form.useForm();
 
-    const [categories, setCategories] = useState([]);
     const [image, setImage] = useState();
     const [previewImage, setPreviewImage] = useState();
-
-    useEffect(() => {
-        const getCategories = async () => {
-            const res = await getAllCategoriesNotPageinate();
-            setCategories(res.data.data);
-        }
-        getCategories();
-    }, [])
+    const global = useSelector(globalSelector);
 
     const onCreate = async (values, image) => {
         const { upload, ...data } = values;
@@ -39,7 +32,7 @@ const CollectionFormProduct = ({ open, onCancel, getProducts, getTotalPageProduc
         <>
 
             <Modal
-                open={categories.length !== 0 ? open : false}
+                open={global.categories.length !== 0 ? open : false}
                 title="Create a new category"
                 okText="Create"
                 cancelText="Cancel"
@@ -82,7 +75,7 @@ const CollectionFormProduct = ({ open, onCancel, getProducts, getTotalPageProduc
                     >
                         <Select>
                             {
-                                categories.map(category =>
+                                global.categories.map(category =>
                                     <Select.Option value={category.id}>{category.name}</Select.Option>
                                 )
                             }

@@ -28,8 +28,8 @@ const Login = () => {
                 toast.error(res.data.msg);
                 return;
             }
-            const user = jwtdecode(res.data);
-            await localStorage.setItem('token', res.data);
+            const user = jwtdecode(res.data.data);
+            await localStorage.setItem('token', res.data.data);
             getProfileForCustomer(user.payload.id);
             if (!user.payload.is_admin) {
                 navigate('/');
@@ -44,7 +44,7 @@ const Login = () => {
 
     const getProfileForCustomer = async (id) => {
         const res = await getProfileCustomer(id);
-        await dispatch(userSlice.actions.updateUser({ ...res.data, is_login: true }));
+        await dispatch(userSlice.actions.updateUser({ ...res.data.data, is_login: true }));
     }
 
     return (

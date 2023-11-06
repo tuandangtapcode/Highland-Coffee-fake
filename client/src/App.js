@@ -8,6 +8,8 @@ import jwtdecode from "jwt-decode";
 import { getProfileCustomer } from './services/authService';
 import userSlice from './redux/userSlice';
 import './App.css';
+import { getAllCategoriesNotPageinate } from './services/categoryService';
+import globalSlice from './redux/globalSlice';
 
 // Admin 
 const AdminRoutes = React.lazy(() => import("./pages/AdminRoutes"));
@@ -297,10 +299,19 @@ const App = () => {
         }
     }, [])
 
+    useEffect(() => {
+        getCategoires();
+    }, [])
+
+    const getCategoires = async () => {
+        const res = await getAllCategoriesNotPageinate();
+        await dispatch(globalSlice.actions.changeCategories(res.data.data))
+    }
+
     const getProfile = async (id) => {
         const res = await getProfileCustomer(id);
-        await dispatch(userSlice.actions.updateUser({ ...res.data, is_login: true }));
-        if (res.data.is_admin) {
+        await dispatch(userSlice.actions.updateUser({ ...res.data.data, is_login: true }));
+        if (res.data.data.is_admin) {
             navigate('/admin/tong-quan');
         } else {
             navigate('/');
